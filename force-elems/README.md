@@ -19,9 +19,14 @@ forceElems :: Traversable t => t a -> t a
 
 Rules:
 
-1. just like `forceElemsList`, `forceElems` does not force the spine of its argument (and so can handle infinite structures) _when there are elements attached to it_ (if there are no elements, feel free to force that spine until an element pops up)
+1. just like `forceElemsList`, `forceElems` does not force the spine of its argument (and so can handle infinite structures) _when there are elements of type `a` attached to it_ (if there are no elements of type `a`, feel free to force that spine until an element pops up)
 2. containers having constructors storing multiple elements of type `a` (the order in which those get forces does not matter) and multiple recursive occurrences are allowed
-3. no need to handle weird custom `Traversable` instances that do not agree with `DeriveTraversable`, like `fmap id` calls inserted manually in the middle of a `traverse` definition (although that particular case can be handled)
+3. no need to handle weird custom `Traversable` instances that do not agree with `DeriveTraversable` (like `fmap id` or `(pure id <*>)` calls inserted manually in the middle of the definition of `traverse`)
+
+And there's a hardcore mode (turned off by default, change `hardcore = False` to `hardcore = True` in [`test/Main.hs`](src/Main.hs) to turn it on):
+
+1. you're not allowed to force any non-`a` field (may occur in `f <*> pure x` for an `x` that is not of type `a`)
+2. you're not allowed to force the spine any more than the final consumer forces it. I.e. "if there are no elements of type `a`, feel free to force that spine until an element pops up" is no longer allowed
 
 Replace `forceElems = undefined` in [`src/Lib.hs`](src/Lib.hs) with an actual definition of `forceElems`.
 

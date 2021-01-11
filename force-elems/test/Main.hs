@@ -5,10 +5,14 @@ module Main where
 
 import           Lib
 
+import           Control.Monad
 import           Data.IORef
 import           Data.List
 import           System.IO.Unsafe
 import           Test.HUnit
+
+hardcore :: Bool
+hardcore = False
 
 withTrace :: ((forall b. a -> b -> b) -> c) -> IO ([a], c)
 withTrace k = do
@@ -59,6 +63,34 @@ tracesAndPathsRose =
                 (map (\m -> go (n + 1) (p . (m :))) [0..n])
         in go 0 id
 
+data L a
+    = L (L a) Int
+    deriving (Functor, Foldable)
+
+instance Traversable L where
+    traverse f (L l i) = flip L i <$> traverse f l
+
+enumL :: L a
+enumL = go 0 where
+    go n = L (go $ n + 1) n
+
+extractIntsL :: L a -> [Int]
+extractIntsL (L l i) = i : extractIntsL l
+
+data E a
+    = E (E a) Int Int Int
+    deriving (Functor, Foldable)
+
+instance Traversable E where
+    traverse f (E l i j k) = E <$> traverse f l <*> pure i <*> pure j <*> pure k
+
+enumE :: E a
+enumE = go 0 where
+    go n = E (go $ n + 1) (error "left forced") n (error "right forced")
+
+extractIntsE :: E a -> [Int]
+extractIntsE (E l _ j _) = j : extractIntsE l
+
 main :: IO ()
 main = runTestTTAndExit . TestList $ map TestCase
     [ do
@@ -89,4 +121,8 @@ main = runTestTTAndExit . TestList $ map TestCase
         (traces, paths) <- tracesAndPathsRose
         length (take 7 . rightmost $ forceElems paths) @?= 7
         traces @?= inits [0..5]
+    , when hardcore $ do
+        take 9 (extractIntsL $ forceElems enumL) @?= [0..8]
+    , when hardcore $ do
+        take 8 (extractIntsE $ forceElems enumE) @?= [0..7]
     ]
