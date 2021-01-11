@@ -19,7 +19,7 @@ forceElems :: Traversable t => t a -> t a
 
 Rules:
 
-1. just like `forceElemsList`, `forceElems` does not force the spine of its argument (and so can handle infinite structures)
+1. just like `forceElemsList`, `forceElems` does not force the spine of its argument (and so can handle infinite structures) _when there are elements attached to it_ (if there are no elements, feel free to force that spine until an element pops up)
 2. containers having constructors storing multiple elements of type `a` (the order in which those get forces does not matter) and multiple recursive occurrences are allowed, as well as polymorphic recursion
 3. no need to handle weird custom `Traversable` instances that do not agree with `DeriveTraversable`, like `fmap id` calls inserted manually in the middle of a `traverse` definition (although that particular case can be handled)
 
