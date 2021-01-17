@@ -94,5 +94,6 @@ Conditions:
 3. neither tree nodes nor elements can contain `error` calls, so feel free to force anything
 4. performance is not a concern: feel free to introduce any computational or memory overhead, as long as it does not result in infinite loops (there's a hard cap of 256 MB for tests to consume though, just to prevent infinite looping and swapping, but that amount of memory should be enough for anyone)
 5. it should be allowed for multiple calls to `materializeForcedBy` to run in parallel (possibly over the same tree)
+6. inspecting the heap directly using tools that GHC provides (e.g. via [`ghc-heap-view`](https://hackage.haskell.org/package/ghc-heap-view)) or libraries that are powered by those tools (e.g. [`nothunks`](https://hackage.haskell.org/package/nothunks)) is considered cheating
 
 There's a small test suite. I run it with `stack test`. `cabal` should probably work as well, but I haven't checked.
