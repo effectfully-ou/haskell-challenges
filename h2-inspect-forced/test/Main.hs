@@ -49,19 +49,20 @@ data Dir
 instance Arbitrary Dir where
     arbitrary = elements [L, R]
 
-infiniteTreeFrom :: Int -> Tree
-infiniteTreeFrom n = Fork (infiniteTreeFrom $ n - 1) n (infiniteTreeFrom $ n + 1)
+infiniteTree :: Tree
+infiniteTree = go 0 where
+    go n = Fork (go $ n - 1) n (go $ n + 1)
 
 instance Arbitrary Tree where
     arbitrary = sized go where
         go n = frequency
-            [ (1, elements $ Leaf : if n > 8 then [infiniteTreeFrom n] else [])
+            [ (1, elements $ Leaf : if n > 8 then [infiniteTree] else [])
             , (n, Fork <$> go (n `div` 2) <*> arbitrary <*> go (n `div` 2))
             ]
 
 test_materializeForcedBy :: String -> TestTree
 test_materializeForcedBy name =
-    testProperty name . withMaxSuccess 100 $ \paths tree ->
+    testProperty name . withMaxSuccess 300 $ \paths tree ->
         materializeForcedBy (sumAtAll paths) tree === cutAtAll paths tree
 
 main :: IO ()
