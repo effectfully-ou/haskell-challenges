@@ -1,4 +1,4 @@
-# h2-inspect-forced
+# Inspect what a function forces
 
 You're given the following data type:
 
