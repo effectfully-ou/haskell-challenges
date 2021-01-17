@@ -14,7 +14,7 @@ Your task is to define a higher-order function in the [`src/Lib.hs`](src/Lib.hs)
 materializeForcedBy :: (Tree -> Int) -> Tree -> Tree
 ```
 
-It takes two arguments, a function `f` of type `Tree -> Int` and a `Tree` `t` to apply that function to, and returns the subtree of `t` that evaluation of `f t` would force, replacing all unevaluated `Int` elements of the original tree with `0` in the resulting subtree.
+It takes two arguments, a function `f` of type `Tree -> Int` and a `Tree` `t` to apply that function to, and returns the subtree of `t` that evaluation of `f t` would force, replacing all not-to-be-forced `Int` elements of the original tree with `0` in the resulting subtree.
 
 For example, having the following tree:
 
