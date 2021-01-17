@@ -14,7 +14,7 @@ Your task is to define a higher-order function in the [`src/Lib.hs`](src/Lib.hs)
 materializeForcedBy :: (Tree -> Int) -> Tree -> Tree
 ```
 
-It takes two arguments, a function `f` of type `Tree -> Int` and a `Tree` `t` to apply that function to, and returns the subtree of `t` that evaluation of `f t` would force, replacing all unevaluated `Int` elements in the resulting subtree with `0`.
+It takes two arguments, a function `f` of type `Tree -> Int` and a `Tree` `t` to apply that function to, and returns the subtree of `t` that evaluation of `f t` would force, replacing all unevaluated `Int` elements of the original tree with `0` in the resulting subtree.
 
 For example, having the following tree:
 
@@ -89,8 +89,10 @@ Note that the `2` and `4` elements from the original tree got replaced by `0`s, 
 
 Conditions:
 
-1. the function that `materializeForcedBy` receives always terminates and can force tree nodes and elements in any order
+1. a function that `materializeForcedBy` receives always terminates and can force tree nodes and elements in any order
 2. `materializeForcedBy` should be able to handle infinite trees
 3. neither tree nodes nor elements can contain `error` calls, so feel free to force anything
 4. performance is not a concern: feel free to introduce any computational or memory overhead, as long as it does not result in infinite loops (there's a hard cap of 256 MB for tests to consume though, just to prevent infinite looping and swapping, but that amount of memory should be enough for anyone)
 5. it should be allowed for multiple calls to `materializeForcedBy` to run in parallel (possibly over the same tree)
+
+There's a small test suite. I run it with `stack test`. `cabal` should probably work as well, but I haven't checked.
