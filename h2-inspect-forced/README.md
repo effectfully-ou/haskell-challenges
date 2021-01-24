@@ -96,4 +96,4 @@ Conditions:
 5. it should be allowed for multiple calls to `materializeForcedBy` to run in parallel (possibly over the same tree)
 6. inspecting the heap directly using tools that GHC provides (e.g. via [`ghc-heap-view`](https://hackage.haskell.org/package/ghc-heap-view)) or libraries that are powered by those tools (e.g. [`nothunks`](https://hackage.haskell.org/package/nothunks)) is considered cheating
 
-There's a small test suite. I run it with `stack test`. `cabal` should probably work as well, but I haven't checked.
+There's a small test suite. I run it with `stack test`.

@@ -7,8 +7,6 @@ import           Lib
 import           Test.Tasty
 import           Test.Tasty.QuickCheck
 
-import           Debug.Trace
-
 sumAt :: [(Dir, Bool)] -> Tree -> Int
 sumAt []                   _            = 0
 sumAt _                    Leaf         = 0
