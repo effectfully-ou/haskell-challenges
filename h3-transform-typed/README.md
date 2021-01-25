@@ -1,5 +1,7 @@
 # Transform a function stored in an existential
 
+This is a challenge to solve with Haskell. Read the [readme of the whole project](../README.md) first if you haven't already.
+
 You're given the following data type that reifies the type of a function at the term level:
 
 ```haskell
