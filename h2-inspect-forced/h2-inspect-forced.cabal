@@ -3,8 +3,6 @@ version:             0.1.0.0
 -- synopsis:
 -- description:
 homepage:            https://github.com/githubuser/h2-inspect-forced#readme
-license:             BSD3
-license-file:        LICENSE
 author:              Author name here
 maintainer:          example@example.com
 copyright:           2021 Author name here
