@@ -1,6 +1,6 @@
 # `forceElems`
 
-This is a challenge to solve with Haskell. Read the [readme of the whole project](../README.md) first if you haven't already.
+This is a challenge to solve with Haskell. Check out the [readme of the whole project](../README.md) first if you haven't already.
 
 The following function "entangles" the elements of a list with its spine, so that whenever the outermost constructor gets forced, the head element also gets forced (unless the list is empty, in which case nothing extra happens):
 

@@ -18,7 +18,7 @@ Every challenge comes with a test suite and there always exists a solution that 
 
 Every challenge gets posted on Reddit when it's out.
 
-If you think there's a problem with a challenge (ambiguous wording, invalid assumption, insufficient testing, anything), please consider filing a report in [issues](https://github.com/effectfully/haskell-challenges/issues) or drop me an email at <my_GitHub_handle>@gmail.com or write a message on Reddit (publicly in the thread of the particular challenge or via DM). Any other kind of feedback (including negative) is highly appreciated as well.
+If you think there's a problem with a challenge (ambiguous wording, invalid assumption, insufficient testing, anything), please consider filing a report in [issues](https://github.com/effectfully/haskell-challenges/issues) or drop me an email at `<my_GitHub_handle>@gmail.com` or write a message on Reddit (publicly in the thread of the particular challenge or via DM). Any other kind of feedback (including negative) is highly appreciated as well.
 
 Currently contributions of new challenges are not accepted as I'm not sure where this whole thing is going and how I want to evolve it.
 

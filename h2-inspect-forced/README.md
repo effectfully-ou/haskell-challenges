@@ -1,6 +1,6 @@
 # Inspect what a function forces
 
-This is a challenge to solve with Haskell. Read the [readme of the whole project](../README.md) first if you haven't already.
+This is a challenge to solve with Haskell. Check out the [readme of the whole project](../README.md) first if you haven't already.
 
 You're given the following data type:
 
