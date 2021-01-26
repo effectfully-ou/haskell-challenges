@@ -64,6 +64,5 @@ Conditions:
 
 1. you're not allowed to use any unsafe functions, in particular `unsafeCoerce`
 2. don't worry about accidentally making underlying functions strict or laziness in general
-3. feel free to use any language extensions
 
 There's a small test suite. I run it with `stack test`.
