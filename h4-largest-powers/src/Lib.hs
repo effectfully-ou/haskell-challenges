@@ -1,6 +1,5 @@
 module Lib
-    ( Iterable (..)
-    , largestPowersInt
+    ( largestPowersInt
     ) where
 
 import           Data.List
