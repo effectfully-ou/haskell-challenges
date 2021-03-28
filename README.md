@@ -2,7 +2,7 @@
 
 This repo contains some challenges to solve. Challenges are Haskell-specific (even [GHC](https://www.haskell.org/ghc)-specific, I guess) and most of them likely do not translate to other programming languages. Each challenge is a standalone [`stack`](https://docs.haskellstack.org/en/stable/README) project (contributing support for [`cabal`](https://www.haskell.org/cabal) would be highly appreciated).
 
-This repo exists for fun of those who want to participate, not for assessing anybody's skills, so please do not use it fot that purpose, especially during the hiring process.
+This repo exists for fun of those who want to participate, not for assessing anybody's skills, so please do not use it for that purpose, especially during the hiring process.
 
 Selection criteria for a challenge:
 
