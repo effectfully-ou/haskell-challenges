@@ -58,7 +58,7 @@ introduced solely to restrict the number of operations that you can use (note th
 Conditions:
 
 1. the generated sequence must be infinite
-2. generation must be fast enough for it to be possible to fold the first `10^8` elements with a function in a few seconds (if you have a slow machine, feel free to loose this requirement)
+2. generation must be fast enough for it to be possible to fold the first `10^8` elements with a function in a few seconds (if you have a slow machine, feel free to loosen this requirement)
 3. you can't use more than 8 MB of RAM
 4. you're allowed to tweak compilation flags as long as the previous condition is not violated
 5. productivity should be greater than 85%
