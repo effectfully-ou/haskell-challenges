@@ -2,8 +2,6 @@
 
 This is a challenge to solve with Haskell. Check out the [readme of the whole project](../README.md) first if you haven't already.
 
-**You're encouraged to post a solution to the challenge, but please refrain from doing so within 24 hours (give or take a few hours) after the challenge gets published, so that more people are motivated to participate. When you post a solution please do that via a link rather than inline code in order not to spoil the fun for others.**
-
 Consider a function `largestPower n m` that finds the largest `p` such that `n^p` is an exact divisor of `m` via straightforward iterated division:
 
 ```haskell
@@ -87,3 +85,5 @@ There's a small test suite. Running it via `stack test` gives me the following (
 
   Productivity  91.8% of total user, 91.8% of total elapsed
 ```
+
+If you enjoyed this or some other challenge and appreciate the effort or want to see the answers, consider becoming a [sponsor of the project](https://github.com/sponsors/effectfully-ou).
