@@ -86,4 +86,4 @@ There's a small test suite. Running it via `stack test` gives me the following (
   Productivity  91.8% of total user, 91.8% of total elapsed
 ```
 
-If you enjoyed this or some other challenge and appreciate the effort or want to see the answers, consider becoming a [sponsor of the project](https://github.com/sponsors/effectfully-ou).
+If you enjoyed this or some other challenge and appreciate the effort or want to see answers, consider becoming a [sponsor of the project](https://github.com/sponsors/effectfully-ou).
