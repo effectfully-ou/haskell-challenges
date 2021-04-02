@@ -1,4 +1,4 @@
-# Prerun action
+# Prerun an action
 
 This is a challenge to solve with Haskell. Check out the [readme of the whole project](../README.md) first if you haven't already.
 
