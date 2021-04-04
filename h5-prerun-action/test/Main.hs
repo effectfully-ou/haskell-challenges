@@ -14,6 +14,9 @@ import           Data.Ix
 import           System.Random
 import           System.Timeout
 
+hardcore :: Bool
+hardcore = False
+
 tIMEOUT :: Int
 tIMEOUT = 5000000
 
@@ -79,8 +82,17 @@ test_concurrency = do
     caught <- readMVar caughtVar
     unless caught $ fail "No asynchronous exception has reached the inner computation"
 
+test_reentrant :: IO ()
+test_reentrant = do
+    twice <- prerun $ \a -> pure $ (+) <$> a <*> a
+    var <- newMVar 0
+    let inc = modifyMVar var $ \n -> pure (succ n, n)
+    res <- twice . twice $ async (twice $ twice inc) >>= wait
+    unless (res == sum [0..15]) $ fail "Failed the hardcode mode"
+
 main :: IO ()
 main = do
     test_soundness
     test_strictness
+    when hardcore $ test_reentrant
     test_concurrency
