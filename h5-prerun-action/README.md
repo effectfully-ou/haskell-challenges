@@ -21,7 +21,7 @@ greetAndReturnPerformThrice a = do
 
 `greetAndReturnPerformThrice` receives an `a :: IO a` and does not use it in the outer action (which only prints "greetings"), but `a` gets used in the inner action thrice with its result printed each time.
 
-Your task is to go to [`Lib.hs`](./src/Lib.hs) and implement `prerun` that has the following type signature:
+Your task is to go to [`src/Lib.hs`](./src/Lib.hs) and implement `prerun` that has the following type signature:
 
 ```haskell
 prerun :: (IO a -> IO (IO b)) -> IO (IO a -> IO b)
@@ -97,6 +97,6 @@ The hardcore mode is disabled by default, to enable it go to [test/Main.hs](./te
 
 There's a small test suite. I run it with `stack test`.
 
-This is an April Fools' Day edition where the fool is me who thought that it wouldn't be hard to write a test suite for this task: I've spent several days trying to find an optimal set of parameters that triggers as many errors as possible while reporting false positives with reasonably small probability (testing concurrent IO without mocking is no easy task) without the test suite taking minutes to run. If you're getting an error having "got a deadlock" in it, try increasing the `tIMEOUT` constant in [`./test/Main.hs`](test/Main.hs) (if tests still fail, probably there's a problem indeed).
+This is an April Fools' Day edition where the fool is me who thought that it wouldn't be hard to write a test suite for this task: I've spent several days trying to find an optimal set of parameters that triggers as many errors as possible while reporting false positives with reasonably small probability (testing concurrent IO without mocking is no easy task) without the test suite taking minutes to run. If you're getting an error having "got a deadlock" in it, try increasing the `tIMEOUT` constant in [`test/Main.hs`](test/Main.hs) (if tests still fail, probably there's a problem indeed).
 
 If you enjoyed this or some other challenge and appreciate the effort or want to see answers, consider becoming a [sponsor of the project](https://github.com/sponsors/effectfully-ou).
