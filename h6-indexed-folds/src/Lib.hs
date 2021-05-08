@@ -1,13 +1,14 @@
-{-# LANGUAGE DataKinds          #-}
-{-# LANGUAGE DeriveFoldable     #-}
-{-# LANGUAGE GADTs              #-}
-{-# LANGUAGE RankNTypes         #-}
-{-# LANGUAGE StandaloneDeriving #-}
+{-# LANGUAGE DataKinds           #-}
+{-# LANGUAGE DeriveFoldable      #-}
+{-# LANGUAGE GADTs               #-}
+{-# LANGUAGE RankNTypes          #-}
+{-# LANGUAGE ScopedTypeVariables #-}
+{-# LANGUAGE StandaloneDeriving  #-}
 
 module Lib
     ( Nat (..)
     , Vec (..)
-    , ifoldl
+    , ifoldl'
     ) where
 
 data Nat = Z | S Nat
@@ -18,9 +19,12 @@ data Vec n a where
 
 deriving instance Foldable (Vec n)
 
-ifoldr :: (forall m. a -> b m -> b ('S m)) -> b 'Z -> Vec n a -> b n
-ifoldr f z Nil         = z
-ifoldr f z (Cons x xs) = f x $ ifoldr f z xs
+ifoldr :: forall b n a. (forall m. a -> b m -> b ('S m)) -> b 'Z -> Vec n a -> b n
+ifoldr f z = go where
+    go :: Vec m a -> b m
+    go Nil         = z
+    go (Cons x xs) = f x $ go xs
+{-# INLINE ifoldr #-}
 
-ifoldl :: (forall m. b m -> a -> b ('S m)) -> b 'Z -> Vec n a -> b n
-ifoldl _ _ = undefined
+ifoldl' :: (forall m. b m -> a -> b ('S m)) -> b 'Z -> Vec n a -> b n
+ifoldl' _ _ = undefined
