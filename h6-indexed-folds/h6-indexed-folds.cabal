@@ -2,7 +2,7 @@ name:                h6-indexed-folds
 version:             0.1.0.0
 -- synopsis:
 -- description:
-homepage:            https://github.com/githubuser/h6-indexed-folds#readme
+homepage:            https://github.com/effectfully-ou/haskell-challenges/h6-indexed-folds#readme
 author:              Author name here
 maintainer:          example@example.com
 copyright:           2021 Author name here
@@ -32,4 +32,4 @@ test-suite h6-indexed-folds-test
 
 source-repository head
   type:     git
-  location: https://github.com/githubuser/h6-indexed-folds
+  location: https://github.com/effectfully-ou/haskell-challenges
