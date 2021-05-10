@@ -32,7 +32,7 @@ Your task is to go to [`src/Lib.hs`](./src/Lib.hs) and implement a **strict** in
 ifoldl' :: (forall m. b m -> a -> b ('S m)) -> b 'Z -> Vec n a -> b n
 ```
 
- **in terms of `ifoldr`**. I.e. you're only allowed to use `ifoldr` and not the constructors of `Vec` (`Nil` and `Cons`). You're also not allowed to use any kind of unsafety (`error`, `undefined`, non-termination, `unsafeCoerce`, `unsafePerformIO`, what have you). You can use any number of auxiliary definitions as long as none of them references the constructors of `Vec` (referencing `Vec` itself is fine) or uses any kind of unsafety. CPU performance does not matter, memory is capped at 8 MBs just to be generous (tests really should run in 0-1 MB).
+ **in terms of `ifoldr`**. I.e. you're only allowed to use `ifoldr` and not the constructors of `Vec` (`Nil` and `Cons`). You're also not allowed to use any kind of unsafety (`error`, `undefined`, non-termination, `unsafeCoerce`, `unsafePerformIO`, what have you). You can use any number of auxiliary definitions as long as none of them references the constructors of `Vec` (referencing `Vec` itself is fine) or uses any kind of unsafety. CPU performance does not matter, memory is capped at 8 MBs just to be generous.
 
 There's a hardcore mode of the challenge that imposes an additional requirement: `ifoldl'` has to run in linear time. The hardcore mode is disabled by default, to enable it go to [test/Main.hs](./test/Main.hs) and replace `hardcore = False` with `hardcore = True`.
 
