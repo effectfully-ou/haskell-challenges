@@ -2,8 +2,6 @@
 
 This is a challenge to solve with Haskell. Check out the [readme of the whole project](../README.md) first if you haven't already.
 
-**You're encouraged to post a solution to the challenge, but please refrain from doing so within 24 hours (give or take a few hours) after the challenge gets published, so that more people are motivated to participate. When you post a solution please do that via a link rather than inline code in order not to spoil the fun for others.**
-
 Consider the type of length-indexed lists a.k.a. vectors:
 
 ```haskell
