@@ -13,6 +13,7 @@ import           Data.Char
 import           Data.List.NonEmpty    (NonEmpty (..))
 import qualified Data.List.NonEmpty    as NonEmpty
 import           Test.Tasty
+import           Test.Tasty.HUnit
 import           Test.Tasty.QuickCheck
 
 import           Debug.Trace
@@ -96,6 +97,46 @@ isFinite :: ListKind -> Bool
 isFinite (Finite _)   = True
 isFinite (Infinite _) = False
 
+test_basic :: TestTree
+test_basic =
+    testCase "basic" $ shortestLongest xsss @?= ["bc", "de", "gh", "uv", "yz"] where
+        xsss =
+            [ [ "a", "bc", "de", "f", "gh" ]
+            , [ "ijk", "lm", "nop", "q"]
+            , [ "rst" ]
+            , [ "uv", "w", "x", "yz"]
+            ]
+
+test_infinite1 :: TestTree
+test_infinite1 =
+    testCase "infinite 1" $ shortestLongest xsss @?= ["ab", "de", "yz"] where
+        xsss =
+            [ [ "ab", "c", "de" ]
+            , [ "fgh", "ij" ]
+            , [ "jkl", repeat 'm', "no" ]
+            , [ "p", "qrst", "uv" ]
+            , [ "w", "x", "yz" ]
+            ]
+
+test_infinite2 :: TestTree
+test_infinite2 =
+    testCase "infinite 2" $ shortestLongest xsss @?= ["ab", "de", "yz"] where
+        xsss =
+            [ [ "ab", "c", "de" ]
+            , [ cycle "fgh", "ij" ]
+            , [ cycle "jkl", repeat 'm', cycle "no" ]
+            , [ "p", cycle "qrst", "uv" ]
+            , [ "w", "x", "yz" ]
+            ]
+
+test_cases :: TestTree
+test_cases =
+    testGroup "cases"
+        [ test_basic
+        , test_infinite1
+        , test_infinite2
+        ]
+
 test_arbitrary :: TestTree
 test_arbitrary =
     testProperty "arbitrary" $ \(Input (Short xsss)) -> withMaxSuccess 5000 $ do
@@ -106,5 +147,6 @@ test_arbitrary =
 main :: IO ()
 main =
     defaultMain . testGroup "all" $
-        [ test_arbitrary
+        [ test_cases
+        , test_arbitrary
         ]

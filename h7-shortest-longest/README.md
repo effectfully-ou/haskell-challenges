@@ -14,7 +14,7 @@ Your today's task is to define a function returning all the shortest sublists am
 ]
 ```
 
-("<...>" is a `String` which is a synonym for `[Char]`, which is how we have a list of list of lists here)
+(`"<...>"` is a `String` which is a synonym for `[Char]`, which is how we have a list of list of lists here)
 
 the longest subsublists are
 
@@ -77,7 +77,7 @@ among which the shortest ones are
 [ "ab", "de", "yz" ]
 ```
 
-We don't need to force `repeat 'm'` it its entirety to figure out that it's not the shortest list, but the above algorithm does attempt to do that, since it tries to calculate the length of each of the subsublists, which is not possible on infinite lists and so the algorithm diverges once it encounters `repeat 'm'`.
+We don't need to force `repeat 'm'` in its entirety to figure out that it's not the shortest list, but the above algorithm does attempt to do that, since it tries to calculate the length of each of the subsublists, which is not possible on infinite lists and so the algorithm diverges once it encounters `repeat 'm'`.
 
 Your task is to go to [`src/Lib.hs`](./src/Lib.hs) and implement
 
