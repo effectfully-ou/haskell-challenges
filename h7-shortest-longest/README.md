@@ -16,7 +16,7 @@ Your today's task is to define a function returning all the shortest sublists am
 
 (`"<...>"` is a `String` which is a synonym for `[Char]`, which is how we have a list of list of lists here)
 
-the longest subsublists are
+the longest (in their respective sublists) subsublists are
 
 ```haskell
 [ [ "bc", "de", "gh" ]
@@ -26,7 +26,7 @@ the longest subsublists are
 ]
 ```
 
-among which the shortest sublists are
+among which and after concatenation the shortest sublists are
 
 ```haskell
 ["bc", "de", "gh", "uv", "yz"]
@@ -71,7 +71,7 @@ where we have `repeat 'm'` in the middle of the middle list. The longest subsubl
 ]
 ```
 
-among which the shortest ones are
+among which and after concatenation the shortest ones are
 
 ```haskell
 ["ab", "de", "yz"]
