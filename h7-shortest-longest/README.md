@@ -29,7 +29,7 @@ the longest subsublists are
 among which the shortest sublists are
 
 ```haskell
-[ "bc", "de", "gh", "uv", "yz" ]
+["bc", "de", "gh", "uv", "yz"]
 ```
 
 One way to define such a function is to retrieve all the longest subsublists, concatenate the results and find the shortest sublists among them like that:
@@ -74,7 +74,7 @@ where we have `repeat 'm'` in the middle of the middle list. The longest subsubl
 among which the shortest ones are
 
 ```haskell
-[ "ab", "de", "yz" ]
+["ab", "de", "yz"]
 ```
 
 We don't need to force `repeat 'm'` in its entirety to figure out that it's not the shortest list, but the above algorithm does attempt to do that, since it tries to calculate the length of each of the subsublists, which is not possible on infinite lists and so the algorithm diverges once it encounters `repeat 'm'`.
