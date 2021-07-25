@@ -97,5 +97,3 @@ Rules:
 4. if there are multiple equal shortest sublists, all of them should be returned (i.e. you should not perform any deduplication)
 
 There's a small test suite. I run it with `stack test`. If you run the tests and see errors mentioning `x(x)` for some `x`, that's how an infinite list of `x`s is printed.
-
-If you enjoyed this or some other challenge and appreciate the effort or want to see answers, consider becoming a [sponsor of the project](https://github.com/sponsors/effectfully-ou).

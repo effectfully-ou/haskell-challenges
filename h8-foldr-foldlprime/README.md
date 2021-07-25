@@ -23,5 +23,3 @@ Rules:
 7. don't worry about things being garbage-collected properly or asynchronous exceptions
 
 There's a small test suite. I run it with `stack test`.
-
-If you enjoyed this or some other challenge and appreciate the effort or want to see answers, consider becoming a [sponsor of the project](https://github.com/sponsors/effectfully-ou).

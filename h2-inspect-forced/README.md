@@ -99,5 +99,3 @@ Conditions:
 6. inspecting the heap directly using tools that GHC provides (e.g. via [`ghc-heap-view`](https://hackage.haskell.org/package/ghc-heap-view)) or libraries that are powered by those tools (e.g. [`nothunks`](https://hackage.haskell.org/package/nothunks)) is considered cheating
 
 There's a small test suite. I run it with `stack test`.
-
-If you enjoyed this or some other challenge and appreciate the effort or want to see answers, consider becoming a [sponsor of the project](https://github.com/sponsors/effectfully-ou).
