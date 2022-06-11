@@ -2,8 +2,6 @@
 
 This is a challenge to solve with Haskell. Check out the [readme of the whole project](../README.md) first if you haven't already.
 
-**You're encouraged to post a solution to the challenge, but please refrain from doing so within 24 hours (give or take a few hours) after the challenge gets published, so that more people are motivated to participate. When you post a solution please do that via a link rather than inline code in order not to spoil the fun for others.**
-
 It is well-known that `foldl'` can be and [is](https://hackage.haskell.org/package/base-4.12.0.0/docs/src/Data.Foldable.html#foldl%27) defined in terms of `foldr` (even though it's a [harder thing](https://github.com/effectfully-ou/haskell-challenges/tree/master/h6-indexed-folds) to do when there are indices involved). Your today's task is to define `foldr` in terms of `foldl'`. That is, go to [src/Lib.hs](./src/Lib.hs) and define the properly lazy right fold
 
 ```haskell
