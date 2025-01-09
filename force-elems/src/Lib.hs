@@ -11,9 +11,9 @@ import Control.Applicative
 import Debug.Trace
 
 
-data SN a = S !a | N a
+-- data SN a = S !a | N a
 
-newtype SemiStrictIdentity a = Strict    { get  :: () -> SN a }
+data SemiStrictIdentity a = S !a | N a
 
 
 {-
@@ -36,29 +36,90 @@ instance Traversable Tree2 where
 
           (f y)                      -- <- применение к y
 
+
+
+
+instance Traversable [] where
+    {-# INLINE traverse #-} -- so that traverse can fuse
+    traverse f = List.foldr cons_f (pure [])
+      where cons_f x ys = liftA2 (:) (f x) ys
+
+foldr k z = go
+          where
+            go []     = z
+            go (y:ys) = y `k` go ys
+
+foldr _ z []     =  z
+foldr f z (x:xs) =  f x (foldr f z xs)
 -}
 
 instance Applicative SemiStrictIdentity where
-    pure = undefined
+    pure x = undefined -- Strict $ \() -> N x
     -- (<*>) :: f (a -> b) -> f a -> f b
-    (<*>) (Strict f ) (Strict b )    = Strict $ \() -> N $ case f () of
-        N f'  -> case b () of
+    -- Работает с Tree2:
+    (<*>) f b = N $ case f of
+        N f' -> case b of
             S b' -> f' b'
             N b' -> f' b'
         S f' -> undefined
+
+        --N f'  -> f' (case b () of
+        --                S b' -> b'
+        --                N b' -> b'
+        --                )
+        --S f' -> undefined
+
     --(<*>) (Strict f) (NonStrict b) = undefined
     --(<*>) (NonStrict f) (Strict b) = undefined -- NonStrict $ f b
     --(<*>) (NonStrict f) (NonStrict b) = undefined
     --
     -- liftA2 :: (a -> b -> c) -> f a -> f b -> f c
-    liftA2 f (Strict left) (Strict right) = Strict $ \() ->
-        case left () of
-            S left' -> case right () of
-                S right' -> S $ f left' right'
-                N right' -> N $ f left' right'
-            N left' -> case right () of
+    liftA2 f left right = 
+        --S $ f (case left () of
+        --            S left' -> left'
+        --            N left' -> left'
+        --      )
+        --      (case right () of
+        --            S right' -> right'
+        --            N right' -> right'
+        --      )
+
+        ---- Вариант, работающий со списками
+        --case left () of
+        --    S left' ->
+        --        N $ f left' (case right () of
+        --                        S right' -> right'
+        --                        N right' -> right'
+        --                        )
+        --    N left' ->
+        --        N $ f left' (case right () of
+        --                        S right' -> right'
+        --                        N right' -> right'
+        --                    )
+
+
+        -- Вариант, работающий с Tree2
+        --case left of
+        --    S left' -> undefined $ case right of
+        --        S right' -> S $ f left' right'
+        --        N right' -> N $ f left' right'
+        --    --
+        --    N left' -> case right of
+        --        S right' -> N $ f left' right'
+        --        N right' -> undefined $ N $ f left' right'
+
+        -- Тоже работающий с Tree2 вариант
+        case right of
+            S right' -> N $ f (case left of
+                S left' -> left'
+                N left' -> left')
+                right'
+            N right' -> undefined {- case right of
                 S right' -> N $ f left' right'
-                N right' -> N $ f left' right'
+                N right' -> undefined $ N $ f left' right'
+                -}
+
+
     --liftA2 f (NonStrict left) (Strict right) = undefined -- NonStrict $ f left $! right
     --liftA2 f (Strict left) (NonStrict right) = undefined
     --liftA2 f (NonStrict left) (NonStrict right) = undefined
@@ -68,14 +129,13 @@ instance Functor SemiStrictIdentity where
     fmap f a = undefined
 
 runSemiStrictIdentity :: SemiStrictIdentity a -> a
-runSemiStrictIdentity (Strict f ) = case f () of
-    S a -> a
-    N a -> a
--- runSemiStrictIdentity (NonStrict a) = undefined -- a
+runSemiStrictIdentity (S a) = a
+runSemiStrictIdentity (N a) = a
 
 
 forceElems :: Traversable t => t a -> t a
-forceElems = runSemiStrictIdentity . traverse (\(!el) -> Strict $ flip seq (S el)) -- Strict el)
+forceElems = runSemiStrictIdentity . traverse S -- Strict el)
+-- forceElems = runSemiStrictIdentity . traverse (\(!el) -> Strict $ \() -> S el) -- Strict el)
 -- forceElems = runIdentity . traverse (\el -> Identity el)
 
 

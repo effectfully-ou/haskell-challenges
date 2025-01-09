@@ -1,4 +1,5 @@
-resolver: lts-16.27
+# orig: resolver: lts-16.27
+resolver: lts-22.19
 
 packages:
 - .
