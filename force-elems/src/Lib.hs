@@ -78,7 +78,7 @@ foldr f z (x:xs) =  f x (foldr f z xs)
 
 
 instance Applicative SemiStrictIdentity where
-    pure x = undefined -- Strict $ \() -> N x
+    pure x = Strict x -- undefined -- Strict $ \() -> N x
     -- (<*>) :: f (a -> b) -> f a -> f b
     --(<*>) (NonStrict f) (Strict a) = undefined -- NonStrict $ f $! a
     --(<*>) (NonStrict f) (NonStrict a) = undefined -- NonStrict $ f a
