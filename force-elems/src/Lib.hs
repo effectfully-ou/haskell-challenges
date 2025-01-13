@@ -2,6 +2,7 @@
 {-# LANGUAGE DeriveTraversable #-}
 module Lib
     ( forceElems
+    , forceElemsList
     ) where
 
 
@@ -11,10 +12,20 @@ import Control.Applicative
 import Debug.Trace
 
 
+-- foldr :: Foldable t => (a -> b -> b) -> b -> t a -> b
+
+
+forceElemsList :: [a] -> [a]
+-- forceElemsList = foldr ((:) $!) []
+forceElemsList = foldr (\a b -> ((:) $! a) $ b) []
+                            --          ^ сначала будет WHNW этот элемент
+                            --             ^ А вот тут уже без форса
+
 -- data SN a = S !a | N a
 
-data SemiStrictIdentity a = S !a | N a
-
+-- data SemiStrictIdentity a = S !a | N a
+data SemiStrictIdentity a = Strict a
+                          | NonStrict { unNonStrict :: a }
 
 {-
 
@@ -53,28 +64,69 @@ foldr _ z []     =  z
 foldr f z (x:xs) =  f x (foldr f z xs)
 -}
 
+
+-- На данный момент получается, что надо как-то форсить **элементы** дерева,
+-- но не форсить поддеревья. Т.е. вот такой код
+--
+-- treeForce (Fork2 l x r y) = (((Fork2 $! (treeForce l)) $! x) (treeForce r)) $! y
+--                                      ^^
+--
+-- уже не работает.
+--
+-- Кажется, это можно достигнуть, введя два типа элементов в структуре:
+-- строгие и нестрогие и тогда уже оперировать именно ими
+
+
 instance Applicative SemiStrictIdentity where
     pure x = undefined -- Strict $ \() -> N x
     -- (<*>) :: f (a -> b) -> f a -> f b
-    -- Работает с Tree2:
-    (<*>) f b = N $ case f of
-        N f' -> case b of
-            S b' -> f' b'
-            N b' -> f' b'
-        S f' -> undefined
-
-        --N f'  -> f' (case b () of
-        --                S b' -> b'
-        --                N b' -> b'
-        --                )
-        --S f' -> undefined
+    --(<*>) (NonStrict f) (Strict a) = undefined -- NonStrict $ f $! a
+    --(<*>) (NonStrict f) (NonStrict a) = undefined -- NonStrict $ f a
+    -- (<*>) (NonStrict _) _ = undefined -- NonStrict $ f a
+    --(<*>) f' (Strict !a) = NonStrict $ (unNonStrict f') a {- case f' of
+     --   NonStrict _ -> undefined
+        -- Strict _ -> undefined -}
+    -- (<*>) f' (NonStrict a) = NonStrict $ (unNonStrict f') a
+    (<*>) f' a' = NonStrict $ case a' of Strict !a   -> case f' of NonStrict f -> f a
+                                                                   _           -> undefined
+                                         NonStrict a -> case f' of NonStrict f -> f a
+                                                                   _           -> undefined
 
     --(<*>) (Strict f) (NonStrict b) = undefined
     --(<*>) (NonStrict f) (Strict b) = undefined -- NonStrict $ f b
     --(<*>) (NonStrict f) (NonStrict b) = undefined
     --
     -- liftA2 :: (a -> b -> c) -> f a -> f b -> f c
-    liftA2 f left right = 
+    -- liftA2 f (SSI left) right = error "xxx --- S?"
+    -- liftA2 f (SSI left) right = SSI $ (f $! left) (unSSI right) -- работающий со списками вариант
+    --liftA2 f (Strict !left)   (Strict    !right) = undefined -- NonStrict $ (f $! left) $! right
+    --liftA2 f (NonStrict left) (Strict    !right) = undefined -- NonStrict $ f left $! right
+    --liftA2 f (Strict !left)   (NonStrict right)  = undefined -- let !left' = left in NonStrict $ f left' right
+    --liftA2 f (NonStrict left) (NonStrict right)  = undefined -- NonStrict $ f left right
+    -- ??
+    --liftA2 f left right = NonStrict $ case left of
+    --    NonStrict left' -> case right of
+    --                          Strict !right' -> f left' right'
+    --                          NonStrict right' -> undefined
+    --    Strict _ -> undefined
+    liftA2 f left right = NonStrict $ case right of
+        NonStrict right' -> case left of
+                            NonStrict left' -> f left' right'
+                            Strict !left' -> f left' right' 
+        Strict !right' -> case left of
+                            NonStrict left' -> f left' right'
+                            Strict !left' -> f left' right'
+
+
+    -- liftA2 f (N left) _ = error "xxx --- N?"
+    {-
+    liftA2 f (S left) (S right) = error "xxx --- SS"
+    liftA2 f (S left) (N right) = error "xxx --- SN"
+    liftA2 f (N left) (S right) = error "xxx --- NS"
+    liftA2 f (N left) (N right) = error "xxx --- NN"
+    -}
+        {-
+    liftA2 f left right = error "def"
         --S $ f (case left () of
         --            S left' -> left'
         --            N left' -> left'
@@ -118,6 +170,7 @@ instance Applicative SemiStrictIdentity where
                 S right' -> N $ f left' right'
                 N right' -> undefined $ N $ f left' right'
                 -}
+                -}
 
 
     --liftA2 f (NonStrict left) (Strict right) = undefined -- NonStrict $ f left $! right
@@ -129,19 +182,19 @@ instance Functor SemiStrictIdentity where
     fmap f a = undefined
 
 runSemiStrictIdentity :: SemiStrictIdentity a -> a
-runSemiStrictIdentity (S a) = a
-runSemiStrictIdentity (N a) = a
+--runSemiStrictIdentity (S a) = a
+-- runSemiStrictIdentity (N a) = a
+runSemiStrictIdentity (Strict a) = a
+runSemiStrictIdentity (NonStrict a) = a
 
 
 forceElems :: Traversable t => t a -> t a
-forceElems = runSemiStrictIdentity . traverse S -- Strict el)
--- forceElems = runSemiStrictIdentity . traverse (\(!el) -> Strict $ \() -> S el) -- Strict el)
--- forceElems = runIdentity . traverse (\el -> Identity el)
-
+forceElems = runSemiStrictIdentity . traverse Strict
 
 {-
 
--- newtype StrictIdentity a =  StrictIdentity {runStrictIdentity_ :: a }
+
+newtype StrictIdentity a =  StrictIdentity {runStrictIdentity_ :: a }
 
 -- | 'runStrictIdentity' unwraps a value of type  @'StrictIdentity' ty@  into a value of type @ty@,  strictly.
 runStrictIdentity :: StrictIdentity a -> a 
@@ -155,9 +208,9 @@ instance Applicative StrictIdentity where
     pure = undefined -- StrictIdentity
     -- {-# INLINE (<*>) #-}
     -- (<*>) :: f (a -> b) -> f a -> f b
-    (<*>) (StrictIdentity f) (StrictIdentity b) = StrictIdentity $! f b
+    (<*>) (StrictIdentity f) (StrictIdentity b) = error "HERE <*>" -- StrictIdentity $! f b
     -- liftA2 :: (a -> b -> c) -> f a -> f b -> f c
-    liftA2 f (StrictIdentity left) (StrictIdentity !right) = StrictIdentity $! f left right
+    liftA2 f (StrictIdentity left) (StrictIdentity !right) = error "liftA2" -- StrictIdentity $! f left right
     -- {-# INLINE liftA2 #-}
   
 instance Functor StrictIdentity where
@@ -183,11 +236,13 @@ atInfList (InfList v _) 0 = v
 atInfList (InfList _ next) i = atInfList next (i - 1)
 
 
-forceElems :: Traversable t => t a -> t a
-forceElems = runStrictIdentity . traverse (\(!el) -> StrictIdentity el)
+-- forceElems :: Traversable t => t a -> t a
+-- forceElems = runStrictIdentity . traverse (\(!el) -> let z = StrictIdentity $! el)
+-- forceElems = runStrictIdentity . traverse (StrictIdentity $!)
+-- forceElems = head . traverse (\el -> (($!) (:)) el [])
+-- forceElems = id
 -- forceElems = head . traverse (\(!el) -> [el])
 -- forceElems = runIdentity . traverse (\(!el) -> Identity $! el)
 
--}
 
-
+ -}
