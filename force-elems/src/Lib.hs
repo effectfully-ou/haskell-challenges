@@ -1,7 +1,6 @@
 {-# LANGUAGE BangPatterns #-}
 module Lib
     ( forceElems
-    , forceElemsList
     ) where
 
 
@@ -9,14 +8,46 @@ import Data.Functor.Identity
 import Control.Applicative
 
 
-forceElemsList :: [a] -> [a]
--- forceElemsList = foldr ((:) $!) []
-forceElemsList = foldr (\a b -> ((:) $! a) $ b) []
-                            --          ^ сначала будет WHNW этот элемент
-                            --             ^ А вот тут уже без форса
+data SemiForcedIdentity a = Forced a
+                          | NonForced a
 
-data SemiStrictIdentity a = Strict a
-                          | NonStrict { unNonStrict :: a }
+
+instance Applicative SemiForcedIdentity where
+    pure = NonForced
+
+    -- (<*>) :: f (a -> b) -> f a -> f b
+    (<*>) f' a' = NonForced $ case a' of
+        Forced  a   ->
+            case f' of NonForced f -> f $! a
+                       _           -> undefined
+        NonForced a ->
+            case f' of NonForced f -> f a
+                       _           -> undefined
+
+    -- liftA2 :: (a -> b -> c) -> f a -> f b -> f c
+    liftA2 f left right = NonForced $ case right of
+        NonForced right' ->
+            case left of NonForced  left' -> f left' right'
+                         Forced    !left' -> f left' right'
+        Forced  right' ->
+            case left of NonForced  left' -> f left' $! right'
+                         Forced     left' -> let !l = left' in (f l $! right')
+
+
+instance Functor SemiForcedIdentity where
+    -- fmap :: (a -> b) -> f a -> f b
+    fmap f a = NonForced $ case a of NonForced  a' -> f a'
+                                     Forced    !a' -> f a'
+
+
+runSemiForcedIdentity :: SemiForcedIdentity a -> a
+runSemiForcedIdentity (Forced a)    = a
+runSemiForcedIdentity (NonForced a) = a
+
+
+forceElems :: Traversable t => t a -> t a
+forceElems = runSemiForcedIdentity . traverse Forced
+
 
 {-
 
@@ -31,12 +62,12 @@ instance Traversable Tree2 where
           ((<*>)
              (liftA2 (\b1 b2 b3 b4 -> Fork2 b1 b2 b3 b4)
                      (traverse f tl)
-                     (f x)           -- <- применение к x
+                     (f x)
              )
              (traverse f tr)
           )
 
-          (f y)                      -- <- применение к y
+          (f y)
 
 
 
@@ -53,51 +84,12 @@ foldr k z = go
 
 foldr _ z []     =  z
 foldr f z (x:xs) =  f x (foldr f z xs)
+
+
+forceElemsList :: [a] -> [a]
+-- forceElemsList = foldr ((:) $!) []
+forceElemsList = foldr (\a b -> ((:) $! a) $ b) []
+                            --          ^ first this WHNW will be calculated
+                            --             ^ and then this without force
+
 -}
-
-
--- На данный момент получается, что надо как-то форсить **элементы** дерева,
--- но не форсить поддеревья. Т.е. вот такой код
---
--- treeForce (Fork2 l x r y) = (((Fork2 $! (treeForce l)) $! x) (treeForce r)) $! y
---                                      ^^
---
--- уже не работает.
---
--- Кажется, это можно достигнуть, введя два типа элементов в структуре:
--- строгие и нестрогие и тогда уже оперировать именно ими
-
-
-instance Applicative SemiStrictIdentity where
-    pure = Strict
-
-    -- (<*>) :: f (a -> b) -> f a -> f b
-    (<*>) f' a' = NonStrict $ case a' of Strict !a   -> case f' of NonStrict f -> f a
-                                                                   _           -> undefined
-                                         NonStrict a -> case f' of NonStrict f -> f a
-                                                                   _           -> undefined
-
-    -- liftA2 :: (a -> b -> c) -> f a -> f b -> f c
-    liftA2 f left right = NonStrict $ case right of
-        NonStrict right' -> case left of
-                                NonStrict  left' -> f left' right'
-                                Strict    !left' -> f left' right' 
-        Strict !right' -> case left of
-                                NonStrict  left' -> f left' right'
-                                Strict    !left' -> f left' right'
-
-
-instance Functor SemiStrictIdentity where
-    -- fmap :: (a -> b) -> f a -> f b
-    fmap f a = NonStrict $ case a of NonStrict  a' -> f a'
-                                     Strict    !a' -> f a'
-
-
-runSemiStrictIdentity :: SemiStrictIdentity a -> a
-runSemiStrictIdentity (Strict a)    = a
-runSemiStrictIdentity (NonStrict a) = a
-
-
-forceElems :: Traversable t => t a -> t a
-forceElems = runSemiStrictIdentity . traverse Strict
-
