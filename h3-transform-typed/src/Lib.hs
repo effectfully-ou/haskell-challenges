@@ -1,4 +1,7 @@
 {-# LANGUAGE GADTs #-}
+{-# LANGUAGE RankNTypes #-}
+{-# LANGUAGE QuantifiedConstraints #-}
+{-# LANGUAGE DeriveFunctor #-}
 
 module Lib where
 
@@ -15,5 +18,11 @@ newtype Wrap a = Wrap
     { unWrap :: a
     }
 
+wrap :: (forall a b . Typeable a, Typeable b) => Scheme a -> Scheme (Wrap b)
+wrap (Res v) = Res (Proxy :: Proxy b) -- $ Wrap <$> v
+wrap (Arg a s) = Arg undefined undefined
+
 wrapFunction :: Function -> Function
-wrapFunction = undefined
+wrapFunction (Function (Res v) f)         = Function (Res $ Wrap <$> v) (Wrap f)
+wrapFunction (Function (Arg arg sch) f) = Function (Arg Proxy (wrap sch)) (\(Wrap v) -> Wrap $ f v)
+wrapFunction _ = undefined
