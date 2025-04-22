@@ -8,16 +8,6 @@ This is a challenge to solve with Haskell. Check out the [readme of the whole pr
 -- | The 'find' function takes a predicate and a structure and returns
 -- the leftmost element of the structure matching the predicate, or
 -- 'Nothing' if there is no such element.
---
--- ==== __Examples__
---
--- Basic usage:
---
--- >>> find (> 42) [0, 5..]
--- Just 45
---
--- >>> find (> 12) [1..7]
--- Nothing
 find :: Foldable t => (a -> Bool) -> t a -> Maybe a
 ```
 
