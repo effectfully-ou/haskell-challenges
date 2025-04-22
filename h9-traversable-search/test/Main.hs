@@ -27,6 +27,7 @@ main =
         [ test_finiteMatrix
         , test_finiteRose
         , test_finiteTree
+        , test_inf
         , test_infiniteMatrix
         , test_infiniteRose
         , test_infiniteTree
@@ -138,6 +139,12 @@ test_infiniteTree :: TestTree
 test_infiniteTree =
     testProperty "infinite Tree" . withMaxSuccess 3000 $ \(NegativeAndTree neg rose) ->
         search (< 0) (cycleTree rose) == Just neg
+
+test_inf :: TestTree
+test_inf =
+    testCase "inf" $ do
+        let inf = Fork () inf () 7 () (Leaf 15) ()
+        search (> 12) inf @?= Just 15
 
 --------------------
 
