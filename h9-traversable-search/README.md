@@ -38,5 +38,6 @@ Rules:
 1. `search` should work for any kind of `DeriveTraversable`-derived `Traversable`, including a depth- and breadth-infinite `data Rose a = Rose a [Rose a]` or `newtype Matrix a = Matrix [[a]]`
 2. `unsafePerformIO` and similar functions are not allowed
 3. the implementation needs to be reasonably efficient
+4. `search` can return any element satisfying the predicate, so feel free to process the given `Traversable` container in any order
 
 There's a small test suite. I run it with `stack test` (takes about a second on my machine).
