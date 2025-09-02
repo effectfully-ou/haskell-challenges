@@ -1,0 +1,40 @@
+cabal-version: 2.2
+
+name:           j1-lazy-foldrM
+version:        0.1.0.0
+description:    Please see the README on GitHub at <https://github.com/githubuser/j1-lazy-foldrM#readme>
+homepage:       https://github.com/githubuser/j1-lazy-foldrM#readme
+bug-reports:    https://github.com/githubuser/j1-lazy-foldrM/issues
+author:         Author name here
+maintainer:     example@example.com
+copyright:      2025 Author name here
+license:        BSD-3-Clause
+build-type:     Simple
+extra-source-files:
+    README.md
+
+source-repository head
+  type: git
+  location: https://github.com/githubuser/j1-lazy-foldrM
+
+library
+  exposed-modules:
+      Lib
+  hs-source-dirs:
+      src
+  build-depends:
+      base >=4.7 && <5
+  default-language: Haskell2010
+
+test-suite j1-lazy-foldrM-test
+  type: exitcode-stdio-1.0
+  main-is: Main.hs
+  hs-source-dirs:
+      test
+  ghc-options: -Wall -Wcompat -Widentities -Wincomplete-record-updates -Wincomplete-uni-patterns -Wmissing-export-lists -Wmissing-home-modules -Wpartial-fields -Wredundant-constraints -rtsopts "-with-rtsopts=-M256M -s"
+  build-depends:
+      base >=4.7 && <5
+    , j1-lazy-foldrM
+    , tasty
+    , tasty-hunit
+  default-language: Haskell2010

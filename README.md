@@ -22,4 +22,4 @@ If you think there's a problem with a challenge (ambiguous wording, invalid assu
 
 Currently contributions of new challenges are not accepted as I'm not sure where this whole thing is going and how I want to evolve it.
 
-You're encouraged to post a solution to a challenge, but please refrain from doing so within 24 hours (give or take a few hours) after the challenge gets published, so that more people are motivated to participate. When you post a solution please do that via a link rather than inline code in order not to spoil the fun for others.
+You're encouraged to post a solution to a challenge. When you post a solution please do that via a link rather than inline code in order not to spoil the fun for others.
