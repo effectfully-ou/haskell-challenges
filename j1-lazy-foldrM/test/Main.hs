@@ -47,7 +47,10 @@ u = error "this was not supposed to be forced"
 
 main :: IO ()
 main = defaultMain $ testGroup "tests"
-    [ testCase "ignore all nil"    $ foldrM (\_ _ -> Nothing) 0 []      @?= Just @Int 0
+    [ testCase "ignore all Nothing" $ foldrM (\_ _ -> Nothing) 0 Nothing  @?= Just @Int 0
+    , testCase "ignore all Just"    $ foldrM (\_ _ -> Nothing) u (Just u) @?= Nothing @Int
+
+    , testCase "ignore all nil"    $ foldrM (\_ _ -> Nothing) 0 []      @?= Just @Int 0
     , testCase "ignore all cons"   $ foldrM (\_ _ -> Nothing) u (u : u) @?= Nothing @Int
     , testCase "ignore el lazy"    $ foldrM (\_ z -> Left  z) 0 (u : u) @?= Left  @Int @Int 0
     , testCase "ignore el strict"  $ foldrM (\_ z -> Right z) 0 [u, u]  @?= Right @Int @Int 0
